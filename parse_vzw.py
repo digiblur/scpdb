@@ -41,6 +41,7 @@ def insert(tac, gci, pci, lat, lon, name, conf):
             '-60' if conf else '-140',
             lat,
             lon,
+            gci,
             )
     c.execute("""INSERT INTO sites_lte
             (user_note,
@@ -52,7 +53,17 @@ def insert(tac, gci, pci, lat, lon, name, conf):
             strongest_rsrp,
             strongest_latitude,
             strongest_longitude)
+        SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+        WHERE NOT EXISTS (
+            SELECT 1 FROM sites_lte
+            WHERE gci = ?)""", record)
+    '''
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""", record)
+    '''
+
+    if not c.rowcount:
+        print('** DUPLICATE GCI**')
+    print(tac, gci, pci, name)
 
 with open(sys.argv[1], 'rb') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')

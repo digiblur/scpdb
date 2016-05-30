@@ -48,6 +48,7 @@ def insert(tac, gci, pci, lat, lon, name, conf):
             '-60' if conf else '-140',
             lat,
             lon,
+            gci,
             )
     c.execute("""INSERT INTO sites_lte
             (user_note,
@@ -59,7 +60,17 @@ def insert(tac, gci, pci, lat, lon, name, conf):
             strongest_rsrp,
             strongest_latitude,
             strongest_longitude)
+        SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+        WHERE NOT EXISTS (
+            SELECT 1 FROM sites_lte
+            WHERE gci = ?)""", record)
+    '''
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""", record)
+    '''
+
+    if not c.rowcount:
+        print('** DUPLICATE GCI**')
+    print(tac, gci, pci, name)
 
 with open(sys.argv[1], 'rb') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
@@ -83,6 +94,7 @@ with open(sys.argv[1], 'rb') as csvfile:
             else:
                 gci = row[cols[gci_col]]
             if gci:
+                gci = gci[:6]
                 if gci in processed:
                     continue
                 processed.append(gci)
@@ -93,7 +105,7 @@ with open(sys.argv[1], 'rb') as csvfile:
                             pci = pci.strip()
                             if pci != '?' and pci.isdigit():
                                 insert(row[cols['TAC']],
-                                        gci[:6] + gci_map[pci_col][idx],
+                                        gci + gci_map[pci_col][idx],
                                         pci,
                                         row[cols['LAT']],
                                         row[cols['LONG']],

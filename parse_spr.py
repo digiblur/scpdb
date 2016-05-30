@@ -65,6 +65,7 @@ def insert(tac, gci, pci, lat, lon, name, conf):
             '-60' if conf else '-140',
             lat,
             lon,
+            gci,
             )
     c.execute("""INSERT INTO sites_lte
             (user_note,
@@ -76,14 +77,23 @@ def insert(tac, gci, pci, lat, lon, name, conf):
             strongest_rsrp,
             strongest_latitude,
             strongest_longitude)
+        SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+        WHERE NOT EXISTS (
+            SELECT 1 FROM sites_lte
+            WHERE gci = ?)""", record)
+    '''
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""", record)
+    '''
+
+    if not c.rowcount:
+        print('** DUPLICATE GCI**')
+    print(tac, gci, pci, name)
 
 def process(tac, gci, pci, cnf, pat, lat, lon, name):
     pcis = [x.strip() for x in pci.split(',')]
     for idx, sid in enumerate(pat):
         _pci = pcis[idx] if idx < len(pcis) and pcis[idx].isdigit() else ''
         _gci = gci[:6] + sid
-        print(tac, _gci, _pci, name)
         insert(tac,
                 _gci,
                 _pci,
