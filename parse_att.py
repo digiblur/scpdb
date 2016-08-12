@@ -12,6 +12,7 @@ gci_map = {
         'B2 PCI': ['08', '09', '0A', '0B'],
         'B4 PCI 2': ['32', '33', '34', '35'],
         'B5 PCI': ['01', '02', '03', '04'],
+        'B30 PCI': ['95', '96', '97', '98'],
         }
 
 # CREATE TABLE sites_lte (_id INTEGER PRIMARY KEY, first_time NUMERIC, first_time_offset NUMERIC, last_time NUMERIC, last_time_offset NUMERIC, last_device_latitude NUMERIC, last_device_longitude NUMERIC, last_device_loc_accuracy NUMERIC, user_note TEXT, provider TEXT, plmn NUMERIC, gci TEXT, pci NUMERIC, tac NUMERIC, dl_chan NUMERIC, strongest_rsrp NUMERIC, strongest_latitude NUMERIC, strongest_longitude NUMERIC)
@@ -72,22 +73,27 @@ with open(sys.argv[1], 'rb') as csvfile:
             name = name + ' NEW'
         for gci_col in ['LTE GCI 1', 'LTE GCI 2', 'LTE GCI 3']:
             gci = row[cols[gci_col]]
-            if gci:
+            if gci and '?' not in gci:
+                inserted = False
+                tac = row[cols['TAC']]
+                lat = row[cols['LAT']]
+                lon = row[cols['LONG']]
                 for pci_col in gci_map:
                     pcis = row[cols[pci_col]]
                     if pcis:
                         for idx, pci in enumerate(pcis.split(',')):
                             pci = pci.strip()
                             if pci != '?' and pci.isdigit():
-                                insert(row[cols['TAC']],
+                                inserted = True
+                                insert(tac,
                                         gci[:6] + gci_map[pci_col][idx],
                                         pci,
-                                        row[cols['LAT']],
-                                        row[cols['LONG']],
+                                        lat,
+                                        lon,
                                         name,
                                         confirmed)
-
-
+                if not inserted:
+                    insert(tac, gci, None, lat, lon, name, confirmed)
 
 conn.commit()
 conn.close()
