@@ -10,14 +10,14 @@ gci_map = {
         'B25 1C': {
             'gci_col': 'PCS LTE GCI',
             'pci_col': 'PCS LTE PCI',
-            'tac_col': 'B25 TAC',
+            'tac_col': 'TAC',
             'confirm': 'PCS LTE Confirmed',
             'pattern': ['01', '02', '03'],
             },
         'B25 2C': {
             'gci_col': 'PCS LTE GCI',
             'pci_col': 'PCS LTE PCI',
-            'tac_col': 'B25 TAC',
+            'tac_col': 'TAC',
             #'confirm': 'PCS 2C Confirmed',
             'confirm': 'PCS LTE Confirmed',
             'pattern': ['09', '0A', '0B'],
@@ -25,24 +25,32 @@ gci_map = {
         'B26 1C': {
             'gci_col': '800 LTE GCI',
             'pci_col': 'PCS LTE PCI',
-            'tac_col': 'B26 TAC',
+            'tac_col': 'TAC',
             'confirm': '800 LTE Confirmed',
             'pattern': ['19', '1A', '1B'],
             },
         'B41 1C': {
             'gci_col': '2.5 LTE GCI',
             'pci_col': '2.5 LTE PCI',
-            'tac_col': 'B41 TAC',
+            'tac_col': 'TAC',
             'confirm': '2.5 LTE Confirmed',
             'pattern': ['31', '32', '33'],
             },
         'B41 2C': {
             'gci_col': '2.5 LTE GCI',
             'pci_col': '2.5 LTE PCI',
-            'tac_col': 'B41 TAC',
+            'tac_col': 'TAC',
             #'confirm': '2.5 2C Confirmed',
             'confirm': '2.5 LTE Confirmed',
             'pattern': ['39', '3A', '3B'],
+            },
+        'B41 3C': {
+            'gci_col': '2.5 LTE GCI',
+            'pci_col': '2.5 LTE PCI',
+            'tac_col': 'TAC',
+            #'confirm': '2.5 2C Confirmed',
+            'confirm': '2.5 LTE Confirmed',
+            'pattern': ['41', '41', '43'],
             },
         }
 
