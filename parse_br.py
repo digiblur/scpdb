@@ -72,7 +72,7 @@ with open(sys.argv[1], 'rb') as csvfile:
         if 'CONFIRM' in row[cols['Notes']]:
             confirmed = False
             name = name + ' NEW'
-        for gci_col in ['LTE GCI-1', 'LTE GCI-2', 'LTE GCI-3']:
+        for gci_col in ['LTE GCI-1', 'LTE GCI-2', 'LTE GCI-3', 'LTE GCI-4']:
             gci = row[cols[gci_col]]
             if gci and '?' not in gci:
                 inserted = False
@@ -84,15 +84,16 @@ with open(sys.argv[1], 'rb') as csvfile:
                     if pcis:
                         for idx, pci in enumerate(pcis.split(',')):
                             pci = pci.strip()
-                            if pci != '?' and pci.isdigit():
-                                inserted = True
-                                insert(tac,
-                                        gci[:6] + gci_map[pci_col][idx],
-                                        pci,
-                                        lat,
-                                        lon,
-                                        name,
-                                        confirmed)
+                            if not pci.isdigit():
+                                pci = ''
+                            inserted = True
+                            insert(tac,
+                                    gci[:6] + gci_map[pci_col][idx],
+                                    pci,
+                                    lat,
+                                    lon,
+                                    name,
+                                    confirmed)
                 if not inserted:
                     insert(tac, gci, None, lat, lon, name, confirmed)
 
