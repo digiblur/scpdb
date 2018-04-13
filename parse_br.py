@@ -14,6 +14,7 @@ gci_map = {
         'B2-2 PCI': ['24', '25', '26', '27'],
         'B5 PCI': ['01', '02', '03', '04'],
         'B30 PCI': ['95', '96', '97', '98'],
+        'B5-2 PCI': ['AC', 'AD', 'AE', 'AF'],
         }
 
 # CREATE TABLE sites_lte (_id INTEGER PRIMARY KEY, first_time NUMERIC, first_time_offset NUMERIC, last_time NUMERIC, last_time_offset NUMERIC, last_device_latitude NUMERIC, last_device_longitude NUMERIC, last_device_loc_accuracy NUMERIC, user_note TEXT, provider TEXT, plmn NUMERIC, gci TEXT, pci NUMERIC, tac NUMERIC, dl_chan NUMERIC, strongest_rsrp NUMERIC, strongest_latitude NUMERIC, strongest_longitude NUMERIC)
@@ -61,7 +62,7 @@ def insert(tac, gci, pci, lat, lon, name, conf):
         print('** DUPLICATE GCI**')
     print(tac, gci, pci, name)
 
-with open(sys.argv[1], 'rb') as csvfile:
+with open(sys.argv[1], 'rt') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
     cols = {x:ind for ind, x in enumerate(next(csvreader))}
     for row in csvreader:
